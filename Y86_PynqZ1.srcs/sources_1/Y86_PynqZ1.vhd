@@ -79,27 +79,28 @@ component Fetch_Stage is
         );
     end component;
 
---component Memory_Stage is
---    port (
---        RS:                 in      std_logic;
---        CLK:                in      std_logic;
---        valP:               in      std_logic_vector(bwAddr-1 downto 0);
---        valA:               in      std_logic_vector(bwReg-1 downto 0);
---        valE:               in      std_logic_vector(bwReg-1 downto 0);
---        icode:              in      std_logic_vector(3 downto 0);
---        instr_valid:        in      std_logic;
---        imem_error:         in      std_logic;
---        BRAM_dout:          in      std_logic_vector(bwMem-1 downto 0);
+component Memory_Stage is
+    port (
+        RS:                 in      std_logic;
+        CLK:                in      std_logic;
+        valP:               in      std_logic_vector(bwAddr-1 downto 0);
+        valA:               in      std_logic_vector(bwReg-1 downto 0);
+        valE:               in      std_logic_vector(bwReg-1 downto 0);
+        icode:              in      std_logic_vector(3 downto 0);
+        instr_valid:        in      std_logic;
+        imem_error:         in      std_logic;
 
---        valM:               out     std_logic_vector(bwMem-1 downto 0);
---        BRAM_RST:           out     std_logic;
---        BRAM_EN:            out     std_logic;
---        BRAM_WE:            out     std_logic_vector(3 downto 0);
---        BRAM_CLK:           out     std_logic;
---        BRAM_addr:          out     std_logic_vector(bwAddr-1 downto 0);
---        BRAM_din:           out     std_logic_vector(bwMem-1 downto 0)
---        );
---    end component;
+        BRAM_PORTA_0_addr:  in      STD_LOGIC_VECTOR ( 12 downto 0 );
+        BRAM_PORTA_0_clk:   in      STD_LOGIC;
+        BRAM_PORTA_0_din:   in      STD_LOGIC_VECTOR ( 31 downto 0 );
+        BRAM_PORTA_0_en:    in      STD_LOGIC;
+        BRAM_PORTA_0_rst:   in      STD_LOGIC;
+        BRAM_PORTA_0_we:    in      STD_LOGIC_VECTOR ( 3 downto 0 );
+
+        BRAM_PORTA_0_dout:  out     STD_LOGIC_VECTOR ( 31 downto 0 );
+        valM:               out     std_logic_vector(bwMem-1 downto 0)
+        );
+    end component;
 
 component Pynq_Interface is
     port (
@@ -146,7 +147,7 @@ signal clk:                         std_logic;
 signal rstn:                        std_logic;
 signal RS:                          std_logic;
 
-signal BRAM_addr:                   std_logic_vector(31 downto 0);
+signal BRAM_addr:                   std_logic_vector(12 downto 0);
 signal BRAM_clk:                    std_logic;
 signal BRAM_din:                    std_logic_vector(31 downto 0);
 signal BRAM_dout:                   std_logic_vector(31 downto 0);
@@ -170,7 +171,16 @@ signal instr_valid:                 std_logic;
 signal imem_error:                  std_logic;
 signal icode:                       std_logic_vector(3 downto 0);
 signal ifunc:                       std_logic_vector(3 downto 0);
-signal fuck:                     std_logic_vector(3 downto 0);
+signal fuck:                        std_logic_vector(3 downto 0);
+
+--BRAM Port A Signals
+signal BRAM_PORTA_0_addr:           std_logic_vector (12 downto 0);
+signal BRAM_PORTA_0_clk:            std_logic;                      
+signal BRAM_PORTA_0_din:            std_logic_vector (31 downto 0);
+signal BRAM_PORTA_0_en:             std_logic;                      
+signal BRAM_PORTA_0_rst:            std_logic;                      
+signal BRAM_PORTA_0_we:             std_logic_vector ( 3 downto 0);
+signal BRAM_PORTA_0_dout:           std_logic_vector (31 downto 0);      
 
 ----------------------------------------------------------------------------
 
@@ -226,27 +236,28 @@ Fetch_Stage
 
 ----------------------------------------------------------------------------
 
---Memory_Stage_inst:
---Memory_Stage
---    port map (
---        RS                          => RS,
---        CLK                         => CLK,
---        valP                        => valP,
---        valA                        => (others => '0'),
---        valE                        => (others => '0'),
---        icode                       => icode,
---        instr_valid                 => instr_valid,
---        imem_error                  => imem_error,
---        BRAM_dout                   => BRAM_dout,
+Memory_Stage_inst:
+Memory_Stage
+    port map (
+        RS                          => RS,
+        CLK                         => CLK,
+        valP                        => valP,
+        valA                        => (others => '0'),
+        valE                        => (others => '0'),
+        icode                       => icode,
+        instr_valid                 => instr_valid,
+        imem_error                  => imem_error,
 
---        valM                        => valM,
---        BRAM_RST                    => BRAM_RST,
---        BRAM_EN                     => BRAM_EN,
---        BRAM_WE                     => BRAM_WE,
---        BRAM_CLK                    => BRAM_CLK,
---        BRAM_addr                   => BRAM_addr,
---        BRAM_din                    => BRAM_din
---        );
+        BRAM_PORTA_0_addr           => BRAM_PORTA_0_addr,
+        BRAM_PORTA_0_clk            => BRAM_PORTA_0_clk,
+        BRAM_PORTA_0_din            => BRAM_PORTA_0_din,
+        BRAM_PORTA_0_en             => BRAM_PORTA_0_en,
+        BRAM_PORTA_0_rst            => BRAM_PORTA_0_rst,
+        BRAM_PORTA_0_we             => BRAM_PORTA_0_we,
+
+        BRAM_PORTA_0_dout           => BRAM_PORTA_0_dout,
+        valM                        => valM
+        );
 
 ----------------------------------------------------------------------------
 

@@ -35,15 +35,16 @@ entity Memory_Stage is
         instr_valid:        in      std_logic;
         imem_error:         in      std_logic;
 
-        BRAM_PORTA_0_addr:  in      STD_LOGIC_VECTOR ( 12 downto 0 );
-        BRAM_PORTA_0_clk:   in      STD_LOGIC;
-        BRAM_PORTA_0_din:   in      STD_LOGIC_VECTOR ( 31 downto 0 );
-        BRAM_PORTA_0_en:    in      STD_LOGIC;
-        BRAM_PORTA_0_rst:   in      STD_LOGIC;
-        BRAM_PORTA_0_we:    in      STD_LOGIC_VECTOR ( 3 downto 0 );
+        BRAM_PORTA_0_addr:  in      std_logic_vector ( 12 downto 0 );
+        BRAM_PORTA_0_clk:   in      std_logic;                       
+        BRAM_PORTA_0_din:   in      std_logic_vector ( 31 downto 0 );
+        BRAM_PORTA_0_en:    in      std_logic;                       
+        BRAM_PORTA_0_rst:   in      std_logic;                       
+        BRAM_PORTA_0_we:    in      std_logic_vector ( 3 downto 0 ); 
 
-        BRAM_PORTA_0_dout:  out     STD_LOGIC_VECTOR ( 31 downto 0 );
-        valM:               out     std_logic_vector(bwMem-1 downto 0)
+        BRAM_PORTA_0_dout:  out     std_logic_vector ( 31 downto 0 );
+        valM:               out     std_logic_vector(bwMem-1 downto 0);
+        status:             out     std_logic_vector(1 downto 0) --p14/400
         );
     end Memory_Stage;
 
@@ -65,22 +66,22 @@ architecture Behavioral of Memory_Stage is
 -- COMPONENTS
 --------------------------- 7 ----- 9 --------------------------------------
 
-COMPONENT blk_mem_gen_0 IS
+COMPONENT Shadow_BRAM IS
     PORT (
       --Port A
-        ENA  :              IN      STD_LOGIC;  --opt port
-        WEA  :              IN      STD_LOGIC_VECTOR(3 DOWNTO 0);
-        ADDRA:              IN      STD_LOGIC_VECTOR(10 DOWNTO 0);
-        DINA :              IN      STD_LOGIC_VECTOR(31 DOWNTO 0);
-        DOUTA:              OUT     STD_LOGIC_VECTOR(31 DOWNTO 0);
-        CLKA :              IN      STD_LOGIC;
+        ENA  :              IN      std_logic;  --opt port             
+        WEA  :              IN      std_logic_vector( 3 downto 0);     
+        ADDRA:              IN      std_logic_vector(10 downto 0);     
+        DINA :              IN      std_logic_vector(31 downto 0);     
+        DOUTA:              OUT     std_logic_vector(31 downto 0);     
+        CLKA :              IN      std_logic;                         
       --Port B
-        ENB  :              IN      STD_LOGIC;  --opt port
-        WEB  :              IN      STD_LOGIC_VECTOR(1 DOWNTO 0);
-        ADDRB:              IN      STD_LOGIC_VECTOR(12 DOWNTO 0);
-        DINB :              IN      STD_LOGIC_VECTOR(15 DOWNTO 0);
-        DOUTB:              OUT     STD_LOGIC_VECTOR(7 DOWNTO 0);
-        CLKB :              IN      STD_LOGIC
+        ENB  :              IN      std_logic;  --opt port             
+        WEB  :              IN      std_logic_vector( 1 downto 0);     
+        ADDRB:              IN      std_logic_vector(12 downto 0);     
+        DINB :              IN      std_logic_vector(15 downto 0);     
+        valM:               OUT     std_logic_vector(bwmem-1 downto 0);
+        CLKB :              IN      std_logic        
         );
     END COMPONENT;
 
@@ -88,7 +89,8 @@ COMPONENT blk_mem_gen_0 IS
 -- CONSTANTS & SIGNALS
 --------------------------- 7 ----- 9 --------------------------------------
 
-
+signal DIN_B:                       std_logic_vector(15 downto 0);
+signal ADDR_B:                      std_logic_vector(12 downto 0);
 
 ----------------------------------------------------------------------------
 
@@ -98,55 +100,31 @@ begin
 -- PROCESSES AND CONNECTIONS
 --------------------------- 7 ----- 9 --------------------------------------
 
---BRAM_RST                    <= RS;
---BRAM_EN                     <= '1';
---BRAM_we                     <= (others => '0');
---BRAM_CLK                    <= CLK;
---BRAM_din                    <= (others => '0');
---BRAM_addr                   <= valP;
-
---valM                        <= BRAM_dout;
+DIN_B                       <= x"0000"; --valA or valP
+ADDR_B                      <= valP(12 downto 0); --valE or valA
+STATUS                      <= "00"; --AOK 0,HLT 1 ,ADR 2, INS 3
 
 ----------------------------------------------------------------------------
 -- PORT MAPS
 --------------------------- 7 ----- 9 --------------------------------------
 
-bmg0:
-blk_mem_gen_0
+BRAM_inst:
+Shadow_BRAM
     PORT MAP (
       --Port A
-        ENA                         => '1',
-        WEA                         => "0000",
+        ENA                         => BRAM_PORTA_0_en,
+        WEA                         => BRAM_PORTA_0_we,
         ADDRA                       => BRAM_PORTA_0_addr(10 downto 0),
-        DINA                        => x"00000000",
-        DOUTA                       => open,
-        CLKA                        => clk,--CLKA_buf,
+        DINA                        => BRAM_PORTA_0_din,
+        DOUTA                       => BRAM_PORTA_0_dout,
+        CLKA                        => BRAM_PORTA_0_clk,
       --Port B
         ENB                         => '1', 
         WEB                         => "00",
-        ADDRB                       => x"000",
-        DINB                        => x"0000",
-        DOUTB                       => open,
-        CLKB                        => clk--CLKB_buf
-        );
-
-bmg1:
-blk_mem_gen_0
-    PORT MAP (
-      --Port A
-        ENA                         => '1',
-        WEA                         => "0000",
-        ADDRA                       => "0000000000",
-        DINA                        => x"00000000",
-        DOUTA                       => open,
-        CLKA                        => clk,--CLKA_buf,
-      --Port B
-        ENB                         => '1', 
-        WEB                         => "00",
-        ADDRB                       => x"000",
-        DINB                        => x"0000",
-        DOUTB                       => open,
-        CLKB                        => clk--CLKB_buf
+        ADDRB                       => ADDR_B,
+        DINB                        => DIN_B,
+        valM                        => valM,
+        CLKB                        => clk
         );
 
 ----------------------------------------------------------------------------
