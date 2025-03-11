@@ -135,7 +135,8 @@ component Pynq_Interface is
         FIXED_IO_ps_srstb:  inout   STD_LOGIC;
         FIXED_IO_ps_clk:    inout   STD_LOGIC;
         FIXED_IO_ps_porb:   inout   STD_LOGIC;
-        FCLK_CLK0:          out     STD_LOGIC
+        FCLK_CLK0:          out     STD_LOGIC;
+        GPIO2_0_tri_o :     out     STD_LOGIC_VECTOR ( 7 downto 0 )
         );
     end component Pynq_Interface;
 
@@ -158,6 +159,7 @@ signal BRAM_we:                     std_logic_vector(3 downto 0);
 signal leds_i:                      std_logic_vector(3 downto 0);
 signal cpu_reg0_0:                  std_logic_vector(31 downto 0);
 signal pwm0_0:                      std_logic;
+signal GPIO2_0_tri_o:               std_logic_vector(7 downto 0);
 
 signal srcA:                        std_logic_vector(3 downto 0);
 signal srcB:                        std_logic_vector(3 downto 0);

@@ -2,8 +2,8 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
---Date        : Sun Mar  9 06:58:29 2025
---Host        : Yondan running 64-bit Ubuntu 22.04.5 LTS
+--Date        : Tue Mar 11 22:40:44 2025
+--Host        : Nidan running 64-bit Ubuntu 22.04.5 LTS
 --Command     : generate_target Pynq_Interface.bd
 --Design      : Pynq_Interface
 --Purpose     : IP block netlist
@@ -1055,6 +1055,7 @@ entity Pynq_Interface is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    GPIO2_0_tri_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
     peripheral_aresetn_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     pwm0_0 : out STD_LOGIC;
     sws_2bits_tri_i : in STD_LOGIC_VECTOR ( 1 downto 0 )
@@ -1200,7 +1201,8 @@ architecture STRUCTURE of Pynq_Interface is
     s_axi_rresp : out STD_LOGIC_VECTOR ( 1 downto 0 );
     s_axi_rvalid : out STD_LOGIC;
     s_axi_rready : in STD_LOGIC;
-    gpio_io_i : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    gpio_io_i : in STD_LOGIC_VECTOR ( 1 downto 0 );
+    gpio2_io_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
   );
   end component Pynq_Interface_axi_gpio_0_0;
   component Pynq_Interface_axi_bram_ctrl_0_0 is
@@ -1376,6 +1378,8 @@ architecture STRUCTURE of Pynq_Interface is
   attribute X_INTERFACE_INFO of DDR_dqs_n : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_N";
   attribute X_INTERFACE_INFO of DDR_dqs_p : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_P";
   attribute X_INTERFACE_INFO of FIXED_IO_mio : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO MIO";
+  attribute X_INTERFACE_INFO of GPIO2_0_tri_o : signal is "xilinx.com:interface:gpio:1.0 GPIO2_0 TRI_O";
+  attribute X_INTERFACE_MODE of GPIO2_0_tri_o : signal is "Master";
   attribute X_INTERFACE_INFO of peripheral_aresetn_0 : signal is "xilinx.com:signal:reset:1.0 RST.PERIPHERAL_ARESETN_0 RST";
   attribute X_INTERFACE_PARAMETER of peripheral_aresetn_0 : signal is "XIL_INTERFACENAME RST.PERIPHERAL_ARESETN_0, INSERT_VIP 0, POLARITY ACTIVE_LOW";
   attribute X_INTERFACE_INFO of sws_2bits_tri_i : signal is "xilinx.com:interface:gpio:1.0 sws_2bits TRI_I";
@@ -1415,6 +1419,7 @@ axi_bram_ctrl_0: component Pynq_Interface_axi_bram_ctrl_0_0
     );
 axi_gpio_0: component Pynq_Interface_axi_gpio_0_0
      port map (
+      gpio2_io_o(7 downto 0) => GPIO2_0_tri_o(7 downto 0),
       gpio_io_i(1 downto 0) => sws_2bits_tri_i(1 downto 0),
       s_axi_aclk => \^fclk_clk0\,
       s_axi_araddr(8 downto 0) => axi_interconnect_0_M01_AXI_ARADDR(8 downto 0),

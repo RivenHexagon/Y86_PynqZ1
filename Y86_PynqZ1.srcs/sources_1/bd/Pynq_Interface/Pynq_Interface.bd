@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x303B50754B3343FA",
+      "boundary_crc": "0xCDB8493687932B1C",
       "device": "xc7z020clg400-1",
       "gen_directory": "../../../../Y86_PynqZ1.gen/sources_1/bd/Pynq_Interface",
       "name": "Pynq_Interface",
@@ -272,6 +272,19 @@
           "PS_PORB": {
             "physical_name": "FIXED_IO_ps_porb",
             "direction": "IO"
+          }
+        }
+      },
+      "GPIO2_0": {
+        "mode": "Master",
+        "vlnv_bus_definition": "xilinx.com:interface:gpio:1.0",
+        "vlnv": "xilinx.com:interface:gpio_rtl:1.0",
+        "port_maps": {
+          "TRI_O": {
+            "physical_name": "GPIO2_0_tri_o",
+            "direction": "O",
+            "left": "7",
+            "right": "0"
           }
         }
       }
@@ -2555,14 +2568,29 @@
         "xci_path": "ip/Pynq_Interface_axi_gpio_0_0/Pynq_Interface_axi_gpio_0_0.xci",
         "inst_hier_path": "axi_gpio_0",
         "parameters": {
+          "C_ALL_INPUTS": {
+            "value": "1"
+          },
+          "C_ALL_OUTPUTS_2": {
+            "value": "1"
+          },
+          "C_GPIO2_WIDTH": {
+            "value": "8"
+          },
+          "C_GPIO_WIDTH": {
+            "value": "2"
+          },
+          "C_IS_DUAL": {
+            "value": "1"
+          },
           "GPIO2_BOARD_INTERFACE": {
             "value": "Custom"
           },
           "GPIO_BOARD_INTERFACE": {
-            "value": "sws_2bits"
+            "value": "Custom"
           },
           "USE_BOARD_FLOW": {
-            "value": "true"
+            "value": "false"
           }
         }
       },
@@ -2596,6 +2624,12 @@
         "interface_ports": [
           "sws_2bits",
           "axi_gpio_0/GPIO"
+        ]
+      },
+      "axi_gpio_0_GPIO2": {
+        "interface_ports": [
+          "GPIO2_0",
+          "axi_gpio_0/GPIO2"
         ]
       },
       "axi_interconnect_0_M00_AXI": {
@@ -2651,8 +2685,8 @@
           "axi_interconnect_0/M00_ARESETN",
           "axi_interconnect_0/S00_ARESETN",
           "axi_timer_0/s_axi_aresetn",
-          "axi_gpio_0/s_axi_aresetn",
-          "axi_bram_ctrl_0/s_axi_aresetn"
+          "axi_bram_ctrl_0/s_axi_aresetn",
+          "axi_gpio_0/s_axi_aresetn"
         ]
       },
       "proc_sys_reset_0_peripheral_aresetn": {
@@ -2664,17 +2698,17 @@
       "processing_system7_0_FCLK_CLK0": {
         "ports": [
           "processing_system7_0/FCLK_CLK0",
-          "processing_system7_0/M_AXI_GP0_ACLK",
           "axi_interconnect_0/S00_ACLK",
-          "proc_sys_reset_0/slowest_sync_clk",
           "axi_bram_ctrl_0/s_axi_aclk",
           "axi_interconnect_0/M00_ACLK",
           "axi_interconnect_0/ACLK",
-          "axi_gpio_0/s_axi_aclk",
           "axi_interconnect_0/M01_ACLK",
           "axi_timer_0/s_axi_aclk",
           "axi_interconnect_0/M02_ACLK",
-          "FCLK_CLK0"
+          "FCLK_CLK0",
+          "axi_gpio_0/s_axi_aclk",
+          "proc_sys_reset_0/slowest_sync_clk",
+          "processing_system7_0/M_AXI_GP0_ACLK"
         ]
       },
       "processing_system7_0_FCLK_RESET0_N": {

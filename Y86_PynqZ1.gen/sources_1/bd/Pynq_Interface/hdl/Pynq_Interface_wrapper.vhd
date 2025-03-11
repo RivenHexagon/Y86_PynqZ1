@@ -2,8 +2,8 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
---Date        : Sun Mar  9 06:58:29 2025
---Host        : Yondan running 64-bit Ubuntu 22.04.5 LTS
+--Date        : Tue Mar 11 22:40:44 2025
+--Host        : Nidan running 64-bit Ubuntu 22.04.5 LTS
 --Command     : generate_target Pynq_Interface_wrapper.bd
 --Design      : Pynq_Interface_wrapper
 --Purpose     : IP block netlist
@@ -43,6 +43,7 @@ entity Pynq_Interface_wrapper is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    GPIO2_0_tri_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
     peripheral_aresetn_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     pwm0_0 : out STD_LOGIC;
     sws_2bits_tri_i : in STD_LOGIC_VECTOR ( 1 downto 0 )
@@ -60,8 +61,6 @@ architecture STRUCTURE of Pynq_Interface_wrapper is
     BRAM_PORTA_0_en : out STD_LOGIC;
     BRAM_PORTA_0_rst : out STD_LOGIC;
     BRAM_PORTA_0_we : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    pwm0_0 : out STD_LOGIC;
-    peripheral_aresetn_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     DDR_cas_n : inout STD_LOGIC;
     DDR_cke : inout STD_LOGIC;
     DDR_ck_n : inout STD_LOGIC;
@@ -83,7 +82,10 @@ architecture STRUCTURE of Pynq_Interface_wrapper is
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
-    FCLK_CLK0 : out STD_LOGIC
+    pwm0_0 : out STD_LOGIC;
+    peripheral_aresetn_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    FCLK_CLK0 : out STD_LOGIC;
+    GPIO2_0_tri_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
   );
   end component Pynq_Interface;
 begin
@@ -118,6 +120,7 @@ Pynq_Interface_i: component Pynq_Interface
       FIXED_IO_ps_clk => FIXED_IO_ps_clk,
       FIXED_IO_ps_porb => FIXED_IO_ps_porb,
       FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
+      GPIO2_0_tri_o(7 downto 0) => GPIO2_0_tri_o(7 downto 0),
       peripheral_aresetn_0(0) => peripheral_aresetn_0(0),
       pwm0_0 => pwm0_0,
       sws_2bits_tri_i(1 downto 0) => sws_2bits_tri_i(1 downto 0)

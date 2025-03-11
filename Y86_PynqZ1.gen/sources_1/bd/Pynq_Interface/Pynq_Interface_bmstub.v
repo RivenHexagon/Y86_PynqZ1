@@ -14,8 +14,6 @@ module Pynq_Interface (
   BRAM_PORTA_0_en,
   BRAM_PORTA_0_rst,
   BRAM_PORTA_0_we,
-  pwm0_0,
-  peripheral_aresetn_0,
   DDR_cas_n,
   DDR_cke,
   DDR_ck_n,
@@ -37,7 +35,10 @@ module Pynq_Interface (
   FIXED_IO_ps_srstb,
   FIXED_IO_ps_clk,
   FIXED_IO_ps_porb,
-  FCLK_CLK0
+  pwm0_0,
+  peripheral_aresetn_0,
+  FCLK_CLK0,
+  GPIO2_0_tri_o
 );
 
   (* X_INTERFACE_INFO = "xilinx.com:interface:gpio:1.0 sws_2bits TRI_I" *)
@@ -59,12 +60,6 @@ module Pynq_Interface (
   output BRAM_PORTA_0_rst;
   (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTA_0 WE" *)
   output [3:0]BRAM_PORTA_0_we;
-  (* X_INTERFACE_IGNORE = "true" *)
-  output pwm0_0;
-  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RST.PERIPHERAL_ARESETN_0 RST" *)
-  (* X_INTERFACE_MODE = "master RST.PERIPHERAL_ARESETN_0" *)
-  (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME RST.PERIPHERAL_ARESETN_0, POLARITY ACTIVE_LOW, INSERT_VIP 0" *)
-  output [0:0]peripheral_aresetn_0;
   (* X_INTERFACE_INFO = "xilinx.com:interface:ddrx:1.0 DDR CAS_N" *)
   (* X_INTERFACE_MODE = "master DDR" *)
   (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME DDR, CAN_DEBUG false, TIMEPERIOD_PS 1250, MEMORY_TYPE COMPONENTS, DATA_WIDTH 8, CS_ENABLED true, DATA_MASK_ENABLED true, SLOT Single, MEM_ADDR_MAP ROW_COLUMN_BANK, BURST_LENGTH 8, AXI_ARBITRATION_SCHEME TDM, CAS_LATENCY 11, CAS_WRITE_LATENCY 11" *)
@@ -111,10 +106,19 @@ module Pynq_Interface (
   inout FIXED_IO_ps_clk;
   (* X_INTERFACE_INFO = "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB" *)
   inout FIXED_IO_ps_porb;
+  (* X_INTERFACE_IGNORE = "true" *)
+  output pwm0_0;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RST.PERIPHERAL_ARESETN_0 RST" *)
+  (* X_INTERFACE_MODE = "master RST.PERIPHERAL_ARESETN_0" *)
+  (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME RST.PERIPHERAL_ARESETN_0, POLARITY ACTIVE_LOW, INSERT_VIP 0" *)
+  output [0:0]peripheral_aresetn_0;
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLK.FCLK_CLK0 CLK" *)
   (* X_INTERFACE_MODE = "master CLK.FCLK_CLK0" *)
   (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME CLK.FCLK_CLK0, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN Pynq_Interface_processing_system7_0_0_FCLK_CLK0, INSERT_VIP 0" *)
   output FCLK_CLK0;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:gpio:1.0 GPIO2_0 TRI_O" *)
+  (* X_INTERFACE_MODE = "master GPIO2_0" *)
+  output [7:0]GPIO2_0_tri_o;
 
   // stub module has no contents
 
