@@ -26,13 +26,13 @@ preplace netloc processing_system7_0_FCLK_CLK0 1 0 3 20 300 420 230 840
 preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 3 30 10 NJ 10 830
 preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 2 1 NJ 590
 preplace netloc axi_gpio_0_GPIO 1 2 1 NJ 720
+preplace netloc axi_gpio_0_GPIO2 1 2 1 NJ 740
 preplace netloc axi_interconnect_0_M00_AXI 1 1 1 N 570
 preplace netloc axi_interconnect_0_M01_AXI 1 1 1 410 590n
 preplace netloc axi_interconnect_0_M02_AXI 1 1 1 390 370n
 preplace netloc processing_system7_0_DDR 1 2 1 NJ 70
 preplace netloc processing_system7_0_FIXED_IO 1 2 1 NJ 90
 preplace netloc processing_system7_0_M_AXI_GP0 1 0 3 30 310 NJ 310 820
-preplace netloc axi_gpio_0_GPIO2 1 2 1 NJ 740
 levelinfo -pg 1 0 210 620 860
 pagesize -pg 1 -db -bbox -sgen 0 0 1100 810
 "

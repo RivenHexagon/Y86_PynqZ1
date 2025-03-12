@@ -50,14 +50,14 @@ architecture Behavioral of ProgCnt_Increment is
 -- SIGNALS
 --------------------------- 7 ----- 9 --------------------------------------
 
-signal PROGRAM_CNTR:                unsigned(bwY86-1 downto 0)
-                                    := to_unsigned(0,bwY86);
-signal COUNTER:                     unsigned(bwY86-1 downto 0)
-                                    := to_unsigned(0,bwY86);
-signal BcIDs:                       unsigned(bwY86-1 downto 0)
-                                    := to_unsigned(0,bwY86);
-signal BcVal:                       unsigned(bwY86-1 downto 0)
-                                    := to_unsigned(0,bwY86);
+signal PROGRAM_CNTR:                unsigned(bwAddr-1 downto 0)
+                                    := to_unsigned(0,bwAddr);
+signal COUNTER:                     unsigned(bwAddr-1 downto 0)
+                                    := to_unsigned(0,bwAddr);
+signal BcIDs:                       unsigned(bwAddr-1 downto 0)
+                                    := to_unsigned(0,bwAddr);
+signal BcVal:                       unsigned(bwAddr-1 downto 0)
+                                    := to_unsigned(0,bwAddr);
 signal BcIDs_i:                     integer;
 signal BcVal_i:                     integer;
 signal RS_i:                        std_logic;
@@ -88,7 +88,7 @@ BcVal_i                     <= bwReg/8 when need_valC   = '1' else 0;--bit width
 BcIDs                       <= to_unsigned(BcIDs_i, bwAddr);
 BcVal                       <= to_unsigned(BcVal_i, bwAddr);         --bit width reg/8
 
-NEW_PC                      <= PROGRAM_CNTR + 1;-- + BcIDs + BcVal;
+NEW_PC                      <= PROGRAM_CNTR + 1 + BcIDs + BcVal;
 
 ----------------------------------------------------------------------------
 

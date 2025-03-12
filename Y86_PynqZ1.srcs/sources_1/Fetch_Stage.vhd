@@ -38,7 +38,7 @@ entity Fetch_Stage is
         ifunc:              out     std_logic_vector( 3 downto 0);
         srcA:               out     std_logic_vector( 3 downto 0);
         srcB:               out     std_logic_vector( 3 downto 0);
-        valC:               out     std_logic_vector(15 downto 0);
+        valC:               out     std_logic_vector(bwReg-1  downto 0);
         valP:               out     std_logic_vector(bwAddr-1 downto 0)
         );
     end Fetch_Stage;

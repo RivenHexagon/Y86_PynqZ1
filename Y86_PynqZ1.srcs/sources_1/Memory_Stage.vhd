@@ -35,7 +35,7 @@ entity Memory_Stage is
         instr_valid:        in      std_logic;
         imem_error:         in      std_logic;
 
-        BRAM_PORTA_0_addr:  in      std_logic_vector ( 12 downto 0 );
+        BRAM_PORTA_0_addr:  in      std_logic_vector (bwAddr-1 downto 0 );
         BRAM_PORTA_0_clk:   in      std_logic;                       
         BRAM_PORTA_0_din:   in      std_logic_vector ( 31 downto 0 );
         BRAM_PORTA_0_en:    in      std_logic;                       
@@ -66,20 +66,20 @@ architecture Behavioral of Memory_Stage is
 -- COMPONENTS
 --------------------------- 7 ----- 9 --------------------------------------
 
-COMPONENT Shadow_BRAM IS
+COMPONENT SEQ_BRAM IS
     PORT (
       --Port A
         ENA  :              IN      std_logic;  --opt port             
         WEA  :              IN      std_logic_vector( 3 downto 0);     
-        ADDRA:              IN      std_logic_vector(10 downto 0);     
+        ADDRA:              IN      std_logic_vector(bwAddr-1 downto 0);     
         DINA :              IN      std_logic_vector(31 downto 0);     
         DOUTA:              OUT     std_logic_vector(31 downto 0);     
         CLKA :              IN      std_logic;                         
       --Port B
         ENB  :              IN      std_logic;  --opt port             
-        WEB  :              IN      std_logic_vector( 1 downto 0);     
-        ADDRB:              IN      std_logic_vector(12 downto 0);     
-        DINB :              IN      std_logic_vector(15 downto 0);     
+        WEB  :              IN      std_logic_vector( 3 downto 0);     
+        ADDRB:              IN      std_logic_vector(bwAddr-1 downto 0);     
+        DINB :              IN      std_logic_vector(31 downto 0);     
         valM:               OUT     std_logic_vector(bwmem-1 downto 0);
         CLKB :              IN      std_logic        
         );
@@ -89,8 +89,8 @@ COMPONENT Shadow_BRAM IS
 -- CONSTANTS & SIGNALS
 --------------------------- 7 ----- 9 --------------------------------------
 
-signal DIN_B:                       std_logic_vector(15 downto 0);
-signal ADDR_B:                      std_logic_vector(12 downto 0);
+signal DIN_B:                       std_logic_vector(bwReg-1 downto 0);
+signal ADDR_B:                      std_logic_vector(bwAddr-1 downto 0);
 
 ----------------------------------------------------------------------------
 
@@ -100,8 +100,8 @@ begin
 -- PROCESSES AND CONNECTIONS
 --------------------------- 7 ----- 9 --------------------------------------
 
-DIN_B                       <= x"0000"; --valA or valP
-ADDR_B                      <= valP(12 downto 0); --valE or valA
+DIN_B                       <= (others => '0'); --valA or valP
+ADDR_B                      <= valP; --valE or valA
 STATUS                      <= "00"; --AOK 0,HLT 1 ,ADR 2, INS 3
 
 ----------------------------------------------------------------------------
@@ -109,18 +109,18 @@ STATUS                      <= "00"; --AOK 0,HLT 1 ,ADR 2, INS 3
 --------------------------- 7 ----- 9 --------------------------------------
 
 BRAM_inst:
-Shadow_BRAM
+SEQ_BRAM
     PORT MAP (
       --Port A
         ENA                         => BRAM_PORTA_0_en,
         WEA                         => BRAM_PORTA_0_we,
-        ADDRA                       => BRAM_PORTA_0_addr(10 downto 0),
+        ADDRA                       => BRAM_PORTA_0_addr,
         DINA                        => BRAM_PORTA_0_din,
         DOUTA                       => BRAM_PORTA_0_dout,
         CLKA                        => BRAM_PORTA_0_clk,
       --Port B
         ENB                         => '1', 
-        WEB                         => "00",
+        WEB                         => (others => '0'),
         ADDRB                       => ADDR_B,
         DINB                        => DIN_B,
         valM                        => valM,

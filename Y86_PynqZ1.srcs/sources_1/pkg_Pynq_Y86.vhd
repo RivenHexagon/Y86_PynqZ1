@@ -38,9 +38,9 @@ package pkg_Pynq_Y86 is
     ------------------------------- 9 ----- 11 -----------------------------
 
     constant bwY86:                         positive := 32;
-    constant bwMem:                         positive := 32;
-    constant bwAddr:                        positive := 32;
-    constant bwReg:                         positive := 16;
+    constant bwMem:                         positive := 48;
+    constant bwAddr:                        positive := 11;
+    constant bwReg:                         positive := 32;
 
     constant BRAM_DEPTH:                    positive := 12; --2048;
     constant CLK_MHZ:                       positive := 100;

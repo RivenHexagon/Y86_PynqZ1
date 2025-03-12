@@ -2,7 +2,7 @@
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
---Date        : Tue Mar 11 22:40:44 2025
+--Date        : Wed Mar 12 22:46:05 2025
 --Host        : Nidan running 64-bit Ubuntu 22.04.5 LTS
 --Command     : generate_target Pynq_Interface_wrapper.bd
 --Design      : Pynq_Interface_wrapper
@@ -82,10 +82,10 @@ architecture STRUCTURE of Pynq_Interface_wrapper is
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
+    GPIO2_0_tri_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
     pwm0_0 : out STD_LOGIC;
     peripheral_aresetn_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
-    FCLK_CLK0 : out STD_LOGIC;
-    GPIO2_0_tri_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+    FCLK_CLK0 : out STD_LOGIC
   );
   end component Pynq_Interface;
 begin

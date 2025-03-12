@@ -6,7 +6,7 @@
 -- 
 -- Create Date:  27.02.2025
 -- Module Name:  Fetch_Stage
--- Project Name: Pynq_Y86 Y86_PynqZ1
+-- Project Name: Y86_PynqZ1
 
 -- Description:  
 -- Loads an updated IDELAY value on any bit change of the IDELAY_IN bits, if
@@ -24,7 +24,7 @@ use UNISIM.vcomponents.all;
 
 ----------------------------------------------------------------------------
 
-entity Pynq_Y86 is
+entity Y86_PynqZ1 is
     port (
         DDR_addr         :      inout   std_logic_vector(14 downto 0);
         DDR_ba           :      inout   std_logic_vector(2 downto 0);
@@ -52,9 +52,9 @@ entity Pynq_Y86 is
         leds_4bits_tri_o:       out     std_logic_vector(3 downto 0);
         rgbleds_6bits_tri_o :   out     std_logic_vector(5 downto 0)
         );
-    end Pynq_Y86;
+    end Y86_PynqZ1;
 
-architecture Behavioral of Pynq_Y86 is
+architecture Behavioral of Y86_PynqZ1 is
 
 ----------------------------------------------------------------------------
 -- COMPONENTS
@@ -74,7 +74,7 @@ component Fetch_Stage is
         ifunc:              out     std_logic_vector( 3 downto 0);
         srcA:               out     std_logic_vector( 3 downto 0);
         srcB:               out     std_logic_vector( 3 downto 0);
-        valC:               out     std_logic_vector(15 downto 0);
+        valC:               out     std_logic_vector(bwReg-1  downto 0);
         valP:               out     std_logic_vector(bwAddr-1 downto 0)
         );
     end component;
@@ -90,7 +90,7 @@ component Memory_Stage is
         instr_valid:        in      std_logic;
         imem_error:         in      std_logic;
 
-        BRAM_PORTA_0_addr:  in      STD_LOGIC_VECTOR ( 12 downto 0 );
+        BRAM_PORTA_0_addr:  in      STD_LOGIC_VECTOR (bwAddr-1 downto 0);
         BRAM_PORTA_0_clk:   in      STD_LOGIC;
         BRAM_PORTA_0_din:   in      STD_LOGIC_VECTOR ( 31 downto 0 );
         BRAM_PORTA_0_en:    in      STD_LOGIC;
@@ -148,13 +148,13 @@ signal clk:                         std_logic;
 signal rstn:                        std_logic;
 signal RS:                          std_logic;
 
-signal BRAM_addr:                   std_logic_vector(12 downto 0);
-signal BRAM_clk:                    std_logic;
-signal BRAM_din:                    std_logic_vector(31 downto 0);
+signal BRAM_addr:                   std_logic_vector(bwAddr-1 downto 0);
+--signal BRAM_clk:                    std_logic;
+--signal BRAM_din:                    std_logic_vector(31 downto 0);
 signal BRAM_dout:                   std_logic_vector(31 downto 0);
-signal BRAM_en:                     std_logic;
-signal BRAM_rst:                    std_logic;
-signal BRAM_we:                     std_logic_vector(3 downto 0);
+--signal BRAM_en:                     std_logic;
+--signal BRAM_rst:                    std_logic;
+--signal BRAM_we:                     std_logic_vector(3 downto 0);
 
 signal leds_i:                      std_logic_vector(3 downto 0);
 signal cpu_reg0_0:                  std_logic_vector(31 downto 0);
@@ -163,7 +163,7 @@ signal GPIO2_0_tri_o:               std_logic_vector(7 downto 0);
 
 signal srcA:                        std_logic_vector(3 downto 0);
 signal srcB:                        std_logic_vector(3 downto 0);
-signal valC:                        std_logic_vector(15 downto 0);
+signal valC:                        std_logic_vector(bwReg-1  downto 0);
 signal valP:                        std_logic_vector(bwAddr-1 downto 0);
 signal valM:                        std_logic_vector(bwMem-1 downto 0);
 
@@ -193,6 +193,8 @@ begin
 --------------------------- 7 ----- 9 --------------------------------------
                                     
 RS                          <= not RSTN;
+BRAM_addr                   <= BRAM_PORTA_0_addr(bwAddr-1 downto 0);
+BRAM_dout                   <= BRAM_PORTA_0_dout;
 
 -- LD4
 rgbleds_6bits_tri_o(2)      <= pwm0_0 and BRAM_addr(0); --R
@@ -250,7 +252,8 @@ Memory_Stage
         instr_valid                 => instr_valid,
         imem_error                  => imem_error,
 
-        BRAM_PORTA_0_addr           => BRAM_PORTA_0_addr,
+        BRAM_PORTA_0_addr           => BRAM_PORTA_0_addr
+                                       (bwAddr-1 downto 0),
         BRAM_PORTA_0_clk            => BRAM_PORTA_0_clk,
         BRAM_PORTA_0_din            => BRAM_PORTA_0_din,
         BRAM_PORTA_0_en             => BRAM_PORTA_0_en,
@@ -268,13 +271,13 @@ Pynq_Interface_i:
 Pynq_Interface
     port map (
         -- Internal connections
-        BRAM_PORTA_0_addr           => BRAM_addr,
-        BRAM_PORTA_0_clk            => BRAM_clk,
-        BRAM_PORTA_0_din            => BRAM_din,
-        BRAM_PORTA_0_dout           => BRAM_dout,
-        BRAM_PORTA_0_en             => BRAM_en,
-        BRAM_PORTA_0_rst            => BRAM_rst,
-        BRAM_PORTA_0_we             => BRAM_we,
+        BRAM_PORTA_0_addr           => BRAM_PORTA_0_addr,
+        BRAM_PORTA_0_clk            => BRAM_PORTA_0_clk,
+        BRAM_PORTA_0_din            => BRAM_PORTA_0_din,
+        BRAM_PORTA_0_dout           => BRAM_PORTA_0_dout,
+        BRAM_PORTA_0_en             => BRAM_PORTA_0_en,
+        BRAM_PORTA_0_rst            => BRAM_PORTA_0_rst,
+        BRAM_PORTA_0_we             => BRAM_PORTA_0_we,
         peripheral_aresetn_0(0)     => rstn,
         FCLK_CLK0                   => clk,
 
