@@ -47,7 +47,7 @@ module blk_mem_gen_1 (
   (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DIN" *)
   input [31:0]dinb;
   (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DOUT" *)
-  output [127:0]doutb;
+  output [63:0]doutb;
 
   // stub module has no contents
 

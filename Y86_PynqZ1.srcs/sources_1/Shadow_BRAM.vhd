@@ -28,16 +28,16 @@ entity Shadow_BRAM is
       --Port A
         ENA  :              IN      std_logic;                         
         WEA  :              IN      std_logic_vector( 3 downto 0);     
-        ADDRA:              IN      std_logic_vector(10 downto 0);     
+        ADDRA:              IN      std_logic_vector(bwAddr-1 downto 0);     
         DINA :              IN      std_logic_vector(31 downto 0);     
         DOUTA:              OUT     std_logic_vector(31 downto 0);     
         CLKA :              IN      std_logic;                         
       --Port B
         ENB  :              IN      std_logic;                         
-        WEB  :              IN      std_logic_vector( 1 downto 0);     
-        ADDRB:              IN      std_logic_vector(12 downto 0);     
-        DINB :              IN      std_logic_vector(15 downto 0);     
-        valM:               OUT     std_logic_vector(bwmem-1 downto 0);
+        WEB  :              IN      std_logic_vector( 3 downto 0);     
+        ADDRB:              IN      std_logic_vector(bwAddr-1 downto 0);     
+        DINB :              IN      std_logic_vector(bwReg-1 downto 0);     
+        DOUTB:              OUT     std_logic_vector(bwFtch-1 downto 0);
         CLKB :              IN      std_logic                
         );
     end Shadow_BRAM;
@@ -54,22 +54,22 @@ architecture Behavioral of Shadow_BRAM is
 -- COMPONENTS
 --------------------------- 7 ----- 9 --------------------------------------
 
-COMPONENT blk_mem_gen_0 IS
+COMPONENT blk_mem_gen_1 is
     PORT (
       --Port A
         CLKA :              in      std_logic;
         ENA  :              in      std_logic;
         WEA  :              in      std_logic_vector( 3 downto 0);
-        ADDRA:              in      std_logic_vector(10 downto 0);
-        DINA :              in      std_logic_vector(31 downto 0);
-        DOUTA:              out     std_logic_vector(31 downto 0);
+        ADDRA:              in      std_logic_vector(bwAddr-1 downto 0);
+        DINA :              in      std_logic_vector( 31 downto 0);
+        DOUTA:              out     std_logic_vector( 31 downto 0);
       --Port B
         CLKB :              in      std_logic;
         ENB  :              in      std_logic;
-        WEB  :              in      std_logic_vector( 1 downto 0);
-        ADDRB:              in      std_logic_vector(12 downto 0);
-        DINB :              in      std_logic_vector(15 downto 0);
-        DOUTB:              out     std_logic_vector( 7 downto 0)
+        WEB  :              in      std_logic_vector( 3 downto 0);
+        ADDRB:              in      std_logic_vector(bwAddr-1 downto 0);
+        DINB :              in      std_logic_vector(bwReg-1 downto 0);
+        DOUTB:              out     std_logic_vector(2*bwReg-1 downto 0)
         );
     END COMPONENT;
 
@@ -77,14 +77,14 @@ COMPONENT blk_mem_gen_0 IS
 -- CONSTANTS & SIGNALS
 --------------------------- 7 ----- 9 --------------------------------------
 
-signal addr1:                       unsigned(12 downto 0);
-signal addr2:                       unsigned(12 downto 0);
-signal addr3:                       unsigned(12 downto 0);
+signal addr0:                       std_logic_vector(bwAddr-1 downto 0);
+signal addr1:                       std_logic_vector(bwAddr-1 downto 0);
 
-signal DOUT_B0:                     std_logic_vector(7 downto 0);
-signal DOUT_B1:                     std_logic_vector(7 downto 0);
-signal DOUT_B2:                     std_logic_vector(7 downto 0);
-signal DOUT_B3:                     std_logic_vector(7 downto 0);
+
+signal DOUTB0:                      std_logic_vector(2*bwReg-1 downto 0);
+signal DOUTB1:                      std_logic_vector(2*bwReg-1 downto 0);
+signal DOUTB10:                     std_logic_vector(4*bwReg-1 downto 0);
+signal DOUTBi:                      std_logic_vector(bwFtch-1 downto 0);
 
 ----------------------------------------------------------------------------
 
@@ -94,18 +94,26 @@ begin
 -- PROCESSES AND CONNECTIONS
 --------------------------- 7 ----- 9 --------------------------------------
 
-addr1 <= unsigned(ADDRB) + 1;
-addr2 <= unsigned(ADDRB) + 2;
-addr3 <= unsigned(ADDRB) + 3;
+addr0 <= ADDRB(bwAddr-1 downto 2) & "00";
+addr1 <= std_logic_vector( unsigned(ADDRB) + 8 );
 
-valM <= DOUT_B3 & DOUT_B2 & DOUT_B1 & DOUT_B0;
+DOUTB10 <= DOUTB1 & DOUTB0;
+
+with ADDRB(1 downto 0) select
+    DOUTB <= DOUTB10(bwFtch-1  downto  0)  when "00",
+             DOUTB10(bwFtch+7  downto  8)  when "01",
+             DOUTB10(bwFtch+15 downto 16)  when "10",
+             DOUTB10(bwFtch+23 downto 24)  when "11",
+                          (others => '0')  when others;
+
+--DOUTB <= x"000000000000";
 
 ----------------------------------------------------------------------------
 -- PORT MAPS Shadow_BRAM
 --------------------------- 7 ----- 9 --------------------------------------
 
 bmg0:
-blk_mem_gen_0
+blk_mem_gen_1
     PORT MAP (
       --Port A
         ENA                         => ENA,
@@ -117,66 +125,28 @@ blk_mem_gen_0
       --Port B
         ENB                         => ENB,
         WEB                         => WEB,
-        ADDRB                       => ADDRB,
+        ADDRB                       => addr0,
         DINB                        => DINB,
-        DOUTB                       => DOUT_B0,
+        DOUTB                       => DOUTB0,
         CLKB                        => CLKB
         );
 
 bmg1:
-blk_mem_gen_0
+blk_mem_gen_1
     PORT MAP (
       --Port A
         ENA                         => ENA,
         WEA                         => WEA,
         ADDRA                       => ADDRA,
         DINA                        => DINA,
-        DOUTA                       => DOUTA,
+        DOUTA                       => open,
         CLKA                        => CLKA,
       --Port B
         ENB                         => ENB,
         WEB                         => WEB,
-        ADDRB                       => std_logic_vector(addr1),
+        ADDRB                       => addr1,
         DINB                        => DINB,
-        DOUTB                       => DOUT_B1,
-        CLKB                        => CLKB
-        );
-
-bmg2:
-blk_mem_gen_0
-    PORT MAP (
-      --Port A
-        ENA                         => ENA,
-        WEA                         => WEA,
-        ADDRA                       => ADDRA,
-        DINA                        => DINA,
-        DOUTA                       => DOUTA,
-        CLKA                        => CLKA,
-      --Port B
-        ENB                         => ENB,
-        WEB                         => WEB,
-        ADDRB                       => std_logic_vector(addr2),
-        DINB                        => DINB,
-        DOUTB                       => DOUT_B2,
-        CLKB                        => CLKB
-        );
-
-bmg3:
-blk_mem_gen_0
-    PORT MAP (
-      --Port A
-        ENA                         => ENA,
-        WEA                         => WEA,
-        ADDRA                       => ADDRA,
-        DINA                        => DINA,
-        DOUTA                       => DOUTA,
-        CLKA                        => CLKA,
-      --Port B
-        ENB                         => ENB,
-        WEB                         => WEB,
-        ADDRB                       => std_logic_vector(addr3),
-        DINB                        => DINB,
-        DOUTB                       => DOUT_B3,
+        DOUTB                       => DOUTB1,
         CLKB                        => CLKB
         );
 

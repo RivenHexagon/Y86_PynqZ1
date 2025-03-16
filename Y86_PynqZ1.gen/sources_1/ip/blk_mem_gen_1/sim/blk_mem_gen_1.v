@@ -95,7 +95,7 @@ input wire [10 : 0] addrb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DIN" *)
 input wire [31 : 0] dinb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DOUT" *)
-output wire [127 : 0] doutb;
+output wire [63 : 0] doutb;
 
   blk_mem_gen_v8_4_9 #(
     .C_FAMILY("zynq"),
@@ -142,9 +142,9 @@ output wire [127 : 0] doutb;
     .C_WEB_WIDTH(4),
     .C_WRITE_MODE_B("WRITE_FIRST"),
     .C_WRITE_WIDTH_B(32),
-    .C_READ_WIDTH_B(128),
+    .C_READ_WIDTH_B(64),
     .C_WRITE_DEPTH_B(2048),
-    .C_READ_DEPTH_B(512),
+    .C_READ_DEPTH_B(1024),
     .C_ADDRB_WIDTH(11),
     .C_HAS_MEM_OUTPUT_REGS_A(1),
     .C_HAS_MEM_OUTPUT_REGS_B(1),
@@ -170,9 +170,9 @@ output wire [127 : 0] doutb;
     .C_EN_SHUTDOWN_PIN(0),
     .C_EN_SAFETY_CKT(0),
     .C_DISABLE_WARN_BHV_RANGE(0),
-    .C_COUNT_36K_BRAM("4"),
+    .C_COUNT_36K_BRAM("2"),
     .C_COUNT_18K_BRAM("0"),
-    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     21.6704 mW")
+    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     11.166049 mW")
   ) inst (
     .clka(clka),
     .rsta(1'D0),

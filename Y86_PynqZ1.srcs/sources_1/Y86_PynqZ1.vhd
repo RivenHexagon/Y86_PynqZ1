@@ -64,7 +64,7 @@ component Fetch_Stage is
     port (
         RS:                 in      std_logic;
         CLK:                in      std_logic;
-        valM:               in      std_logic_vector(bwMem-1 downto 0);
+        DOUTB:              in      std_logic_vector(bwFtch-1 downto 0);
 
         need_regIDs:        out     std_logic;
         need_valC:          out     std_logic;
@@ -98,7 +98,7 @@ component Memory_Stage is
         BRAM_PORTA_0_we:    in      STD_LOGIC_VECTOR ( 3 downto 0 );
 
         BRAM_PORTA_0_dout:  out     STD_LOGIC_VECTOR ( 31 downto 0 );
-        valM:               out     std_logic_vector(bwMem-1 downto 0)
+        DOUTB:              out     std_logic_vector(bwFtch-1 downto 0)
         );
     end component;
 
@@ -165,7 +165,8 @@ signal srcA:                        std_logic_vector(3 downto 0);
 signal srcB:                        std_logic_vector(3 downto 0);
 signal valC:                        std_logic_vector(bwReg-1  downto 0);
 signal valP:                        std_logic_vector(bwAddr-1 downto 0);
-signal valM:                        std_logic_vector(bwMem-1 downto 0);
+--signal valM:                        std_logic_vector(bwMem-1 downto 0);
+signal DOUTB:                       std_logic_vector(bwFtch-1 downto 0);
 
 signal need_regIDs:                 std_logic;
 signal need_valC:                   std_logic;
@@ -224,7 +225,7 @@ Fetch_Stage
     port map (
         RS                          => RS,
         CLK                         => CLK,
-        valM                        => valM,
+        DOUTB                        => DOUTB,
 
         need_regIDs                 => need_regIDs,
         need_valC                   => need_valC,
@@ -261,7 +262,7 @@ Memory_Stage
         BRAM_PORTA_0_we             => BRAM_PORTA_0_we,
 
         BRAM_PORTA_0_dout           => BRAM_PORTA_0_dout,
-        valM                        => valM
+        DOUTB                       => DOUTB
         );
 
 ----------------------------------------------------------------------------

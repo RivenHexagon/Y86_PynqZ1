@@ -66,7 +66,7 @@ blk_mem_gen_1 your_instance_name (
   .web(web),      // input wire [3 : 0] web
   .addrb(addrb),  // input wire [10 : 0] addrb
   .dinb(dinb),    // input wire [31 : 0] dinb
-  .doutb(doutb)  // output wire [127 : 0] doutb
+  .doutb(doutb)  // output wire [63 : 0] doutb
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

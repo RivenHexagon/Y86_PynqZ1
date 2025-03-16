@@ -28,7 +28,7 @@ entity Fetch_Stage is
     port (
         RS:                 in      std_logic;
         CLK:                in      std_logic;
-        valM:               in      std_logic_vector(bwMem-1 downto 0);
+        DOUTB:              in      std_logic_vector(bwFtch-1 downto 0);
 
         need_regIDs:        out     std_logic;
         need_valC:          out     std_logic;
@@ -89,18 +89,18 @@ begin
 -- PROCESSES AND CONNECTIONS
 --------------------------- 7 ----- 9 --------------------------------------
 
-icode                       <= valM(3 downto 0);
-ifunc                       <= valM(7 downto 4);
+icode                       <= DOUTB(3 downto 0);
+ifunc                       <= DOUTB(7 downto 4);
 
-srcA                        <= valM(11 downto  8)      when 
-                               need_regIDs = '1'       else
+srcA                        <= DOUTB(11 downto  8)      when 
+                               need_regIDs = '1'        else
                                HCL_constants(FNONE);
-srcB                        <= valM(15 downto 12)      when
-                               need_regIDs = '1'       else
+srcB                        <= DOUTB(15 downto 12)      when
+                               need_regIDs = '1'        else
                                HCL_constants(FNONE);
-valC                        <= valM(bwMem-1 downto 16) when 
-                               need_regIDs = '1'       else
-                               valM(bwMem-9 downto 8);
+valC                        <= DOUTB(bwFtch-1 downto 16) when 
+                               need_regIDs = '1'        else
+                               DOUTB(bwFtch-9 downto 8);
 
 ----------------------------------------------------------------------------
 -- PORT MAPS

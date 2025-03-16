@@ -43,7 +43,7 @@ entity Memory_Stage is
         BRAM_PORTA_0_we:    in      std_logic_vector ( 3 downto 0 ); 
 
         BRAM_PORTA_0_dout:  out     std_logic_vector ( 31 downto 0 );
-        valM:               out     std_logic_vector(bwMem-1 downto 0);
+        DOUTB:              out     std_logic_vector(bwFtch-1 downto 0);
         status:             out     std_logic_vector(1 downto 0) --p14/400
         );
     end Memory_Stage;
@@ -66,22 +66,22 @@ architecture Behavioral of Memory_Stage is
 -- COMPONENTS
 --------------------------- 7 ----- 9 --------------------------------------
 
-COMPONENT SEQ_BRAM IS
+COMPONENT Shadow_BRAM IS
     PORT (
       --Port A
+        CLKA :              IN      std_logic;
         ENA  :              IN      std_logic;  --opt port             
         WEA  :              IN      std_logic_vector( 3 downto 0);     
         ADDRA:              IN      std_logic_vector(bwAddr-1 downto 0);     
         DINA :              IN      std_logic_vector(31 downto 0);     
         DOUTA:              OUT     std_logic_vector(31 downto 0);     
-        CLKA :              IN      std_logic;                         
       --Port B
+        CLKB :              IN      std_logic;
         ENB  :              IN      std_logic;  --opt port             
         WEB  :              IN      std_logic_vector( 3 downto 0);     
         ADDRB:              IN      std_logic_vector(bwAddr-1 downto 0);     
-        DINB :              IN      std_logic_vector(31 downto 0);     
-        valM:               OUT     std_logic_vector(bwmem-1 downto 0);
-        CLKB :              IN      std_logic        
+        DINB :              IN      std_logic_vector(bwReg-1 downto 0);     
+        DOUTB:              OUT     std_logic_vector(bwFtch-1 downto 0)
         );
     END COMPONENT;
 
@@ -109,7 +109,7 @@ STATUS                      <= "00"; --AOK 0,HLT 1 ,ADR 2, INS 3
 --------------------------- 7 ----- 9 --------------------------------------
 
 BRAM_inst:
-SEQ_BRAM
+Shadow_BRAM
     PORT MAP (
       --Port A
         ENA                         => BRAM_PORTA_0_en,
@@ -123,7 +123,7 @@ SEQ_BRAM
         WEB                         => (others => '0'),
         ADDRB                       => ADDR_B,
         DINB                        => DIN_B,
-        valM                        => valM,
+        DOUTB                       => DOUTB,
         CLKB                        => clk
         );
 

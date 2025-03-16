@@ -37,7 +37,7 @@ entity SEQ_BRAM is
         WEB  :              IN      std_logic_vector( 3 downto 0);     
         ADDRB:              IN      std_logic_vector(10 downto 0);     
         DINB :              IN      std_logic_vector(31 downto 0);     
-        valM:               OUT     std_logic_vector(bwmem-1 downto 0);
+        valM:               OUT     std_logic_vector(bwFtch-1 downto 0);
         CLKB :              IN      std_logic                
         );
     end SEQ_BRAM;
@@ -59,17 +59,17 @@ Component blk_mem_gen_1 is
       --Port A
         CLKA :              in      std_logic;
         ENA  :              in      std_logic;
-        WEA  :              in      std_logic_vector(  3 downto 0);
+        WEA  :              in      std_logic_vector( 3 downto 0);
         ADDRA:              in      std_logic_vector(bwAddr-1 downto 0);
         DINA :              in      std_logic_vector( 31 downto 0);
         DOUTA:              out     std_logic_vector( 31 downto 0);
       --Port B
         CLKB :              in      std_logic;
         ENB  :              in      std_logic;
-        WEB  :              in      std_logic_vector(  3 downto 0);
-        ADDRB:              in      std_logic_vector( 10 downto 0);
-        DINB :              in      std_logic_vector( 31 downto 0);
-        DOUTB:              out     std_logic_vector(127 downto 0)
+        WEB  :              in      std_logic_vector( 3 downto 0);
+        ADDRB:              in      std_logic_vector(bwAddr-1 downto 0);
+        DINB :              in      std_logic_vector(31 downto 0);
+        DOUTB:              out     std_logic_vector(63 downto 0)
         );
     END COMPONENT;
 
@@ -88,7 +88,7 @@ begin
 -- PROCESSES AND CONNECTIONS
 --------------------------- 7 ----- 9 --------------------------------------
 
-ADDRBi  <= ADDRB(10 downto 2) & "00";
+ADDRBi  <= ADDRB(bwAddr-1 downto 2) & "00";
 
 with ADDRB(1 downto 0) select
     valM <= DOUTB(47 downto  0)  when "00",

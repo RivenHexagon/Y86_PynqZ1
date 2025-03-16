@@ -64,7 +64,7 @@ COMPONENT blk_mem_gen_1
     web : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
     addrb : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
     dinb : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    doutb : OUT STD_LOGIC_VECTOR(127 DOWNTO 0) 
+    doutb : OUT STD_LOGIC_VECTOR(63 DOWNTO 0) 
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
